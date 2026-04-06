@@ -1,16 +1,17 @@
-# React + Vite
+.......................Start Learning TanStack Query............................
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Step 1. sabse pahel QueryClientProvide ke under apne app ko rap krna hai pure code ko
+Code:- <QueryClientProvider>
+      <RouterProvider router={router}></RouterProvider>;
+    </QueryClientProvider> 
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Step 2. hame QueryClient ko create krna pdta hai or usko QueryClientProvider ke under clent ke under pass krna pdta hai like props
+Code:- 
+const App = () => {
+  const queryClient = new QueryClient();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router}></RouterProvider>;
+    </QueryClientProvider>
+  );
+};
