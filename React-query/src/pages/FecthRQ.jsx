@@ -14,17 +14,18 @@ export const FetchRQ = () => {
     }
   };
 
-  const { data } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ["posts"],
     queryFn: getPostData,
   });
 
-  console.log(data);
+  if (isPending) return <p>.....Loading</p>;
+  if (isError) return <p>Error: {error.message || "Something went wrong"}</p>;
 
   return (
     <div>
       <ul className="section-accordion">
-        {data?.map((curPost) => {
+        {data.map((curPost) => {
           const { title, id, body } = curPost;
           return (
             <li key={id}>
