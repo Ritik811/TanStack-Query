@@ -40,4 +40,14 @@ const { data } = useQuery({
 
   or iske under direct destructring use hoti hai {data} or bhi bhaut kux hota hai
 
+2. iske under hame isPending or Error or error bhi access milta hai isko ham direct access kr skte hai or uske baad use kr skte hai 
+  code:- 
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPostData,
+  });
+
+  if (isPending) return <p>.....Loading</p>;
+  if (isError) return <p>Error: {error.message || "Something went wrong"}</p>;
+
   
