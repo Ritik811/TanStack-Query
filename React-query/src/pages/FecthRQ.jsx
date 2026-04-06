@@ -1,3 +1,39 @@
+import { useQuery } from "@tanstack/react-query";
+import { fetchPostData } from "../components/API/api";
+
 export const FetchRQ = () => {
-  return <h1>Hello FetchRQ</h1>;
+  const getPostData = async () => {
+    try {
+      const res = await fetchPostData();
+      if (res.status === 200) {
+        console.log(res.data);
+        return res.data;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const { data } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPostData,
+  });
+
+  console.log(data);
+
+  return (
+    <div>
+      <ul className="section-accordion">
+        {data?.map((curPost) => {
+          const { title, id, body } = curPost;
+          return (
+            <li key={id}>
+              <p>{title}</p>
+              <p>{body}</p>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 };

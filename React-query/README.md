@@ -15,3 +15,29 @@ const App = () => {
     </QueryClientProvider>
   );
 };
+
+Step 3. How to Fetch Data
+1. useQuery hook ka use krna pdta hai 
+Code:- 
+
+const getPostData = async () => {
+    try {
+      const res = await fetchPostData();
+      if (res.status === 200) {
+        console.log(res.data);
+        return res.data;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+const { data } = useQuery({
+    queryKey: ["posts"], // Yah hamara key ki traf hota hai jo bhi kux ham [''] ke under likhte hai uske base pr page render hota hai
+    queryFn: getPostData, // yah pr woh function likhna pdta hai jo api se data lkr ata hai iske last ham () use nhi krte hai 
+  });
+
+  or iske under direct destructring use hoti hai {data} or bhi bhaut kux hota hai
+
+  

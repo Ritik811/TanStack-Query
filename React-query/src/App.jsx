@@ -16,11 +16,11 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/fetchOld",
+        path: "/trad",
         element: <FetchOld />,
       },
       {
-        path: "/fetchRQ",
+        path: "/rq",
         element: <FetchRQ />,
       },
     ],
