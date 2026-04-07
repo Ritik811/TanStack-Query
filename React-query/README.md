@@ -69,7 +69,16 @@ const { data, isPending, isError, error } = useQuery({
     staleTime: 5000, 
   });
 
-5. 
+5. What is Polling in React Query
+defination:- Polling ka mtlb hai ki har second data kaise update hoga woh bhi live uske liye ham refechInterval ka use krte hai lkin ager ham dusre tab pr chle jate hai toh data call hona band ho jata hai agr ham chahate hai data fecth hona band na ho toh ham refetchIntervalInBackground ka use krte hai usko true kr dete hai
+code:- 
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPostData,
+    <!-- staleTime: 5000, --> // isko use nhi krna hota hai refecthInterval ke sath
+    refetchInterval: 1000, // yah kitne der bad data fecth krna hai 
+    refetchIntervalInBackground: true, // agr ham new tab pr bhi chle jate hai fir bhi data fecth hona chahiye 
+  });
 
 
   

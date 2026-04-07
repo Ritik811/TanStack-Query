@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPostData } from "../components/API/api";
+import { NavLink } from "react-router-dom";
 
 export const FetchRQ = () => {
   const getPostData = async () => {
@@ -18,6 +19,8 @@ export const FetchRQ = () => {
     queryKey: ["posts"],
     queryFn: getPostData,
     staleTime: 5000,
+    refetchInterval: 1000,
+    refetchIntervalInBackground: true,
   });
 
   if (isPending) return <p>.....Loading</p>;
@@ -29,10 +32,12 @@ export const FetchRQ = () => {
         {data.map((curPost) => {
           const { title, id, body } = curPost;
           return (
-            <li key={id}>
-              <p>{title}</p>
-              <p>{body}</p>
-            </li>
+            <NavLink to={`/rq/${id}`}>
+              <li key={id}>
+                <p>{title}</p>
+                <p>{body}</p>
+              </li>
+            </NavLink>
           );
         })}
       </ul>
