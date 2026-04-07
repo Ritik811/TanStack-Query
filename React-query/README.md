@@ -50,4 +50,26 @@ const { data } = useQuery({
   if (isPending) return <p>.....Loading</p>;
   if (isError) return <p>Error: {error.message || "Something went wrong"}</p>;
 
+3. What is saltTime 
+defination:- saltTime ka use tb kiya jata jb hame pata hai ki hara data kitne time ke baad update hoga q ki react-query pahele hi data cach memory me store kr leti hai or direct wahi se data fetch krti hai lakin api ko call hr baar jata hai pr hame pta hai ki hamara data 1 hours ke baad update hoga toh ham saltTime ka use kr skte hai. 
+code:- 
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPostData,
+    staleTime: 5000, // har 5 sec ke baad api ko call kr dena 
+  });
+
+4. What is Garbage Collection(gcTime)
+defination:- jaha pr hamara wast material pra hota hai jiska koi kam nhi hot hai har 5 min ke baad refres hota hai
+code:- 
+const { data, isPending, isError, error } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPostData,
+    gcTime: 5000, // yah hamne time badal diya ab har 5 sec ke baad cach clear hoga
+    staleTime: 5000, 
+  });
+
+5. 
+
+
   
