@@ -80,5 +80,28 @@ code:-
     refetchIntervalInBackground: true, // agr ham new tab pr bhi chle jate hai fir bhi data fecth hona chahiye 
   });
 
+6. What is pagination
+defination:- Pagination kya mtlb website ke end me prev or next ka button so krta hai page number show krta or ham next pr click kr ke dusre page pa jate hai or prev pr click kr ke back aajate hai 
+code:- 
+
+  export const fetchPostData = (pageNumber) => {
+  return api.get(`/posts?_start=${pageNumber}&_limit=3`); // yah limit hai jo utna hi data show hota hai ek page pr
+  };
+      <div className="pagination-section container">
+        <button
+          disabled={pageNumber === 0 ? true : false} 
+          onClick={() => setPageNumber((prev) => prev - 3)} // iska mtlb hai ki hame 1 page pr 3 show ho rhe hai woh sab 3 data change ho jayenge 
+        >
+          Prev
+        </button>
+        <p>{pageNumber / 3 + 1}</p>
+        <button onClick={() => setPageNumber((prev) => prev + 3)}>Next</button>
+      </div>
+
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["posts", pageNumber],
+    queryFn: getPostData,
+    placeholderData: keepPreviousData, iske mtlb jb ham next pr click krte hai toh api ko call hota hai toh data ane me time lgta hai toh yah loading nhi dikhata hai yah prev wala data hi show krta hai jab tk data load nhi ho jata
+  });
 
   
