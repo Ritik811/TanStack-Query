@@ -1,10 +1,16 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { fetchPostData } from "../components/API/api";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { deletePost, fetchPostData } from "../components/API/api";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
 export const FetchRQ = () => {
   const [pageNumber, setPageNumber] = useState(0);
+  const queryClient = useQueryClient();
   const getPostData = async () => {
     try {
       const res = await fetchPostData(pageNumber);
@@ -16,6 +22,15 @@ export const FetchRQ = () => {
       console.log(err);
     }
   };
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => deletePost(id),
+    onSuccess: (data, id) => {
+      queryClient.setQueriesData(["posts", pageNumber], (curEle) => {
+        return curEle.filter((post) => post.id !== id);
+      });
+    },
+  });
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["posts", pageNumber],
@@ -32,13 +47,16 @@ export const FetchRQ = () => {
         {data.map((curPost) => {
           const { title, id, body } = curPost;
           return (
-            <NavLink to={`/rq/${id}`}>
-              <li key={id}>
-                <p>ID: {id}</p>
-                <p>TITLE: {title}</p>
-                <p>BODY: {body}</p>
-              </li>
-            </NavLink>
+            <>
+              <NavLink to={`/rq/${id}`}>
+                <li key={id}>
+                  <p>ID: {id}</p>
+                  <p>TITLE: {title}</p>
+                  <p>BODY: {body}</p>
+                </li>
+              </NavLink>
+              <button onClick={() => deleteMutation.mutate(id)}>Delete</button>
+            </>
           );
         })}
       </ul>

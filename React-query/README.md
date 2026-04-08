@@ -104,4 +104,39 @@ code:-
     placeholderData: keepPreviousData, iske mtlb jb ham next pr click krte hai toh api ko call hota hai toh data ane me time lgta hai toh yah loading nhi dikhata hai yah prev wala data hi show krta hai jab tk data load nhi ho jata
   });
 
+
+7. What is useMutation 
+defination:- iska use ham tb krte hai hame data ko updat creat or delete krna prta or data ko read krne ke liye ham useQuery ka use krte hai
+
+1. Delete Data 
+Step 1. iskro create krte hai 
+
+// Yah axios ka path hai 
+export const deletePost = (id) => {
+  return api.delete(`/posts/${id}`);
+};
+
+  // yah code ka path hai
+  const deleteMutation = useMutation({
+    mutationFn: (id) => deletePost(id), // function hai deltePost(id) yah api jaha pr data delete hoga axiso ke madat se 
+  });
+
+Step 2. 
+code:- // ise call krna deleteMutation.mutate() ka use krke 
+ <button onClick={() => deleteMutation.mutate(id)}>Delete</button>
+
+Step 3. 
+code:- 
+const queryClient = useQueryClient(); // iska use ham useQuery ke cach se data lane ke lye krte hai 
+
+const deleteMutation = useMutation({
+    mutationFn: (id) => deletePost(id),
+    onSuccess: (data, id) => { // jab success ho jaye toh data delte kr do
+      queryClient.setQueriesData(["posts", pageNumber], (curEle) => { // iske under do chize hoti hai pahele kon se queryKey ka data delte krna or dusra wah data 
+        return curEle.filter((post) => post.id !== id);
+      });
+    },
+  });
+
+
   
