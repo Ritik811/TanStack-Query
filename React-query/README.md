@@ -158,4 +158,47 @@ export const updatePost = (id) => {
       });
     },
   });
+
+Step 5. Infinite Scroll
+code:- 
+export const fetchUsers = async ({ pageParam }) => {
+  try {
+    const res = await axios.get(
+      `https://api.github.com/users?per_page=10&page=${pageParam}`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+    const { data, hasNextPage, fetchNextPage, isFetchingNextPage, status } =
+      useInfiniteQuery({
+        queryKey: ["users"],
+        queryFn: fetchUsers,
+      getNextPageParam: (lastPage, allPages) => {
+        return lastPage.length === 10 ? allPages.length + 1 : undefined;
+      },
+    });
+
+    const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight; // Poore page ki height
+    const scrollTop = document.documentElement.scrollTop; // Kitna niche scroll kiya
+    const innerHeight = window.innerHeight; // Browser window ki height
+
+    // Agar (niche ka gap) + (window height) >= total height, toh end aa gaya
+    if (innerHeight + scrollTop >= scrollHeight - 5) {
+      // 5px ka margin safe rehta hai
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasNextPage]);
+
+  
   
