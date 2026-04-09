@@ -138,5 +138,24 @@ const deleteMutation = useMutation({
     },
   });
 
+Step 4. Update Data 
+code:- 
+export const updatePost = (id) => {
+  return api.patch(`/posts/${id}`, { title: "I have Updated Data" });
+};
 
+  const updateMutation = useMutation({
+    mutationFn: (id) => updatePost(id),
+    onSuccess: (apiData, postId) => {
+      console.log(apiData, postId);
+
+      queryClient.setQueryData(["posts", pageNumber], (postsData) => {
+        return postsData?.map((curPost) => {
+          return curPost.id === postId
+            ? { ...curPost, title: apiData.data.title }
+            : curPost;
+        });
+      });
+    },
+  });
   

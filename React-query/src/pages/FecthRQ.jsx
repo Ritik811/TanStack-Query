@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { deletePost, fetchPostData } from "../components/API/api";
+import { deletePost, fetchPostData, updatePost } from "../components/API/api";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
@@ -32,6 +32,22 @@ export const FetchRQ = () => {
     },
   });
 
+  // Updat Data
+  const updateMutation = useMutation({
+    mutationFn: (id) => updatePost(id),
+    onSuccess: (apiData, postId) => {
+      console.log(apiData, postId);
+
+      queryClient.setQueryData(["posts", pageNumber], (postsData) => {
+        return postsData?.map((curPost) => {
+          return curPost.id === postId
+            ? { ...curPost, title: apiData.data.title }
+            : curPost;
+        });
+      });
+    },
+  });
+
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["posts", pageNumber],
     queryFn: getPostData,
@@ -44,19 +60,18 @@ export const FetchRQ = () => {
   return (
     <div>
       <ul className="section-accordion">
-        {data.map((curPost) => {
-          const { title, id, body } = curPost;
+        {data?.map((curElem) => {
+          const { id, title, body } = curElem;
           return (
-            <>
+            <li key={id}>
               <NavLink to={`/rq/${id}`}>
-                <li key={id}>
-                  <p>ID: {id}</p>
-                  <p>TITLE: {title}</p>
-                  <p>BODY: {body}</p>
-                </li>
+                <p>{id}</p>
+                <p>{title}</p>
+                <p>{body}</p>
               </NavLink>
               <button onClick={() => deleteMutation.mutate(id)}>Delete</button>
-            </>
+              <button onClick={() => updateMutation.mutate(id)}>Update</button>
+            </li>
           );
         })}
       </ul>
