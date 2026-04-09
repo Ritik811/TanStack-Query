@@ -200,5 +200,24 @@ export const fetchUsers = async ({ pageParam }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasNextPage]);
 
-  
-  
+
+Step 7. Step 5. Infinite Scroll by using npm package
+npm i  react-intersection-observer
+code:-
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
+
+      <div ref={ref} style={{ padding: "20px", textAlign: "center" }}>
+        {isFetchingNextPage
+          ? "Loading more..."
+          : hasNextPage
+            ? "Scroll down to load more"
+            : "No more users"}
+      </div> 

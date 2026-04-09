@@ -1,46 +1,48 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchUsers } from "../components/API/api";
 import { useEffect } from "react";
+import {  useInView } from "react-intersection-observer";
 
-export const InfiniteScrolling = () => {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, status } =
+export const InfiniteScroll = () => {
+  const { data, hasNextPage, fetchNextPage, status, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["users"],
       queryFn: fetchUsers,
       getNextPageParam: (lastPage, allPages) => {
+        console.log("lastPage", lastPage, allPages);
         return lastPage.length === 10 ? allPages.length + 1 : undefined;
       },
     });
 
-  const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight; // Poore page ki height
-    const scrollTop = document.documentElement.scrollTop; // Kitna niche scroll kiya
-    const innerHeight = window.innerHeight; // Browser window ki height
+  console.log(data);
 
-    // Agar (niche ka gap) + (window height) >= total height, toh end aa gaya
-    if (innerHeight + scrollTop >= scrollHeight - 5) {
-      // 5px ka margin safe rehta hai
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    }
-  };
+  //   const handleScroll = () => {
+  //     const bottom =
+  //       window.innerHeight + window.scrollY >=
+  //       document.documentElement.scrollHeight - 1;
+
+  //     if (bottom && hasNextPage) {
+  //       fetchNextPage();
+  //     }
+  //   };
+
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasNextPage]);
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
 
-  if (status === "loading")
-    return (
-      <div>
-        <h1>...Loading</h1>
-      </div>
-    );
+  if (status === "loading") return <div>Loading...</div>;
   if (status === "error") return <div>Error fetching data</div>;
+
   return (
     <div>
       <h1>Infinite Scroll with React Query v5</h1>
+
       {data?.pages?.map((page, index) => (
         <ul key={index}>
           {page.map((user) => (
@@ -59,13 +61,13 @@ export const InfiniteScrolling = () => {
           ))}
         </ul>
       ))}
-      {/* {/* <div ref={ref} style={{ padding: "20px", textAlign: "center" }}> */}
-      {isFetchingNextPage
-        ? "Loading more..."
-        : hasNextPage
-          ? "Scroll down to load more"
-          : "No more users"}
-      {/* </div> } */}
+      <div ref={ref} style={{ padding: "20px", textAlign: "center" }}>
+        {isFetchingNextPage
+          ? "Loading more..."
+          : hasNextPage
+            ? "Scroll down to load more"
+            : "No more users"}
+      </div>
     </div>
   );
 };
