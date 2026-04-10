@@ -1,5 +1,7 @@
 .......................Start Learning TanStack Query............................
 
+Live Link: "tanstak-query.netlify.app"
+
 Step 1. sabse pahel QueryClientProvide ke under apne app ko rap krna hai pure code ko
 Code:- <QueryClientProvider>
       <RouterProvider router={router}></RouterProvider>;
